@@ -1,0 +1,68 @@
+---
+import { url } from '@src/utils/path';
+import BlogCard from "@src/components/BlogCard.astro";
+import BlogPagination from "@src/components/BlogPagination.astro";
+import { getCollection } from "astro:content";
+
+interface Props {
+  currentPage?: number;
+}
+
+const { currentPage = 1 } = Astro.props;
+
+const POSTS_PER_PAGE = 3;
+
+const allPosts = await getCollection("blog");
+const sortedPosts = allPosts.sort(
+  (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime()
+);
+
+const totalPages = Math.ceil(sortedPosts.length / POSTS_PER_PAGE);
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const paginatedPosts = sortedPosts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+
+const posts = paginatedPosts.map((post) => ({
+  image: { src: post.data.featuredImage, alt: post.data.title },
+  date: post.data.date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }),
+  category: post.data.category,
+  title: post.data.title,
+  excerpt: post.data.subtitle,
+  link: url(`/blogs/${post.id.replace(/\.mdx$/, "")}`),
+}));
+
+const blogData = {
+  title: "Latest Articles",
+  posts,
+};
+---
+
+<section id="blog-posts" class="pb-16 lg:pb-24 pt-32 lg:pt-40 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-full h-64 bg-linear-to-b from-cyber-dark to-transparent"></div>
+    <div class="absolute bottom-0 left-0 w-full h-64 bg-linear-to-t from-cyber-dark to-transparent"></div>
+
+    <div class="max-w-7xl mx-auto px-6 relative">
+      <div class="flex justify-center mb-16">
+        <div class="relative">
+          <h2 class="text-4xl md:text-5xl font-bold text-center">
+            {blogData.title.split(" ")[0]}{" "}
+            <span class="text-cyber-blue text-shadow-glow">
+              {blogData.title.split(" ")[1]}
+            </span>
+          </h2>
+          <div class="h-1 w-32 bg-cyber-blue mt-4 mx-auto rounded-full glow"></div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {blogData.posts.map((post) => (
+          <BlogCard blog={post} />
+        ))}
+      </div>
+
+      <BlogPagination currentPage={currentPage} totalPages={totalPages} />
+    </div>
+  </section>

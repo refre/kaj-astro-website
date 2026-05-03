@@ -1,0 +1,27 @@
+{
+  "name": "futura-astro",
+  "type": "module",
+  "version": "1.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^5",
+    "@iconify-json/fa": "^1.2.2",
+    "@iconify-json/fa6-brands": "^1.2.6",
+    "@iconify-json/fa6-solid": "^1.2.4",
+    "@splidejs/splide": "^4.1.4",
+    "@tailwindcss/vite": "^4.2.1",
+    "alpinejs": "^3.15.8",
+    "astro": "^6",
+    "astro-icon": "^1.1.5",
+    "glightbox": "^3.3.1",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/alpinejs": "^3.13.11"
+  }
+}

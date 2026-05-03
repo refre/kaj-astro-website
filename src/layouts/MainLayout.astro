@@ -1,0 +1,263 @@
+---
+import "@src/styles/global.css";
+import { Font } from 'astro:assets';
+import { url } from '@src/utils/path';
+import "@splidejs/splide/dist/css/splide.min.css";
+import "glightbox/dist/css/glightbox.min.css";
+import Navigation from '@src/components/Navigation.astro';
+import Footer from '@src/components/Footer.astro';
+import BackToTop from '@src/components/BackToTop.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const DEFAULT_TITLE       = "Futura AI | AI Software Solutions";
+const DEFAULT_DESCRIPTION = "Futura AI delivers cutting-edge artificial intelligence software solutions for businesses ready to lead in the future.";
+
+const { title, description = DEFAULT_DESCRIPTION } = Astro.props;
+const pageTitle = title ? `${title} | Futura AI` : DEFAULT_TITLE;
+---
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="shortcut icon" type="image/x-icon" href={url('/img/favicon.png')} />
+    <Font cssVariable="--font-poppins" preload />
+    <Font cssVariable="--font-orbitron" preload />
+  </head>
+  <body class="font-sans text-white overflow-x-hidden">
+    <Navigation />
+    <main class="relative z-10">
+      <slot />
+    </main>
+    <Footer />
+    <BackToTop />
+
+    <script>
+    import Alpine from 'alpinejs';
+    Alpine.start();
+
+    import GLightbox from 'glightbox';
+    // Initialize GLightbox
+    const lightbox = GLightbox({
+      selector: '.glightbox',
+    });
+
+    // Smooth Scroll and Active Class Handling
+    document.addEventListener('DOMContentLoaded', () => {
+      const navLinks = document.querySelectorAll('a[data-type="smooth"]');
+      const sections = document.querySelectorAll('section[id]');
+
+      const removeActiveClasses = () => {
+        navLinks.forEach((link) => link.classList.remove('active'));
+      };
+
+      const setActiveLink = (targetId: string) => {
+        removeActiveClasses();
+        const activeLink = Array.from(navLinks).find(
+          (link) => link.getAttribute('href') === `#${targetId}`
+        );
+        if (activeLink) activeLink.classList.add('active');
+      };
+
+      const checkCurrentSection = () => {
+        let current = '';
+        sections.forEach((section) => {
+          const sectionTop = (section as HTMLElement).offsetTop - 80;
+          const sectionHeight = section.clientHeight;
+          if (
+            window.pageYOffset >= sectionTop &&
+            window.pageYOffset < sectionTop + sectionHeight
+          ) {
+            current = section.getAttribute('id') || '';
+          }
+        });
+        if (current) {
+          setActiveLink(current);
+        } else if (window.pageYOffset < ((sections[0] as HTMLElement)?.offsetTop || 0) - 80) {
+          setActiveLink('home');
+        }
+      };
+
+      window.addEventListener('scroll', checkCurrentSection);
+
+      navLinks.forEach((anchor) => {
+        anchor.addEventListener('click', (e) => {
+          e.preventDefault();
+          const href = anchor.getAttribute('href');
+          const targetId = href ? href.substring(1) : '';
+          const targetElement = document.getElementById(targetId);
+          if (targetElement) {
+            const yOffset = -70;
+            if (targetElement) {
+              const y = targetElement ? targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset : 0;
+              window.scrollTo({ top: y, behavior: 'smooth' });
+              setActiveLink(targetId);
+            }
+          }
+        });
+      });
+
+      const initializeActiveLink = () => {
+        const hash = window.location.hash.substring(1);
+        if (hash && document.getElementById(hash)) {
+          setActiveLink(hash);
+          const targetElement = document.getElementById(hash);
+          const yOffset = -70;
+          const y = targetElement ? targetElement.getBoundingClientRect().top + window.pageYOffset + yOffset : 0;
+          window.scrollTo({ top: y, behavior: 'instant' });
+        } else {
+          checkCurrentSection();
+        }
+      };
+
+      initializeActiveLink();
+      window.addEventListener('hashchange', initializeActiveLink);
+    });
+
+    // Scroll Animate — IntersectionObserver
+    (function () {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el = entry.target as HTMLElement;
+            const anim  = el.dataset.animate || 'fadeInUp';
+            const delay = el.dataset.delay   || '';
+            el.classList.remove('opacity-0');
+            el.classList.add('animated', anim);
+            if (delay) el.classList.add(`delay${delay}`);
+            observer.unobserve(el);
+          });
+        },
+        { threshold: 0.1, rootMargin: '0px 0px -40px 0px' }
+      );
+      document.querySelectorAll<HTMLElement>('[data-animate]').forEach((el) =>
+        observer.observe(el)
+      );
+    })();
+
+    // Counter — IntersectionObserver
+    (function () {
+      function animateCount(
+        el: HTMLElement,
+        end: number,
+        duration: number,
+        onTick: (val: number) => void
+      ) {
+        const startTime = performance.now();
+        const tick = (now: number) => {
+          const elapsed  = now - startTime;
+          const progress = Math.min(elapsed / (duration * 1000), 1);
+          // ease-out quad
+          const eased = 1 - (1 - progress) * (1 - progress);
+          onTick(Math.round(eased * end));
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+        requestAnimationFrame(tick);
+      }
+
+      const counterObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const el       = entry.target as HTMLElement;
+            const end      = parseInt(el.dataset.counter || '0', 10);
+            const duration = parseFloat(el.dataset.duration || '2');
+
+            // Plain counter spans  (.js-counter)
+            if (el.classList.contains('js-counter')) {
+              animateCount(el, end, duration, (val) => { el.textContent = String(val); });
+            }
+
+            // Progress-bar groups (.js-counter-group)
+            if (el.classList.contains('js-counter-group')) {
+              const valueEl = el.querySelector<HTMLElement>('.js-counter-value');
+              const barEl   = el.querySelector<HTMLElement>('.js-counter-bar');
+              animateCount(el, end, duration, (val) => {
+                if (valueEl) valueEl.textContent = String(val);
+                if (barEl)   barEl.style.width   = `${val}%`;
+              });
+            }
+
+            counterObserver.unobserve(el);
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      document
+        .querySelectorAll<HTMLElement>('.js-counter, .js-counter-group')
+        .forEach((el) => counterObserver.observe(el));
+    })();
+
+    // Back to Top Button Functionality
+    document.addEventListener('DOMContentLoaded', () => {
+      const backToTopButton = document.getElementById('back-to-top');
+      if (backToTopButton) {
+        window.addEventListener('scroll', () => {
+          if (window.scrollY > 300) {
+            backToTopButton.style.display = 'block';
+            backToTopButton.classList.remove('opacity-0', 'invisible');
+            backToTopButton.classList.add('opacity-100', 'visible');
+          } else {
+            backToTopButton.classList.remove('opacity-100', 'visible');
+            backToTopButton.classList.add('opacity-0', 'invisible');
+            setTimeout(() => {
+              if (window.scrollY <= 300) {
+                backToTopButton.style.display = 'none';
+              }
+            }, 300);
+          }
+        });
+
+        backToTopButton.addEventListener('click', () => {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+      }
+    });
+
+    // Twinkling Stars and Matrix Code
+    function createStars() {
+      const starCount = 50;
+      for (let i = 0; i < starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 100}vw`;
+        star.style.top = `${Math.random() * 100}vh`;
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${3 + Math.random() * 7}s`;
+        document.body.appendChild(star);
+      }
+    }
+
+    function createMatrixEffect() {
+      const matrixContainer = document.createElement('div');
+      matrixContainer.className = 'matrix-code';
+      document.body.appendChild(matrixContainer);
+
+      const charCount = 100;
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*+-=<>?';
+      for (let i = 0; i < charCount; i++) {
+        const char = document.createElement('span');
+        char.className = 'matrix-char';
+        char.textContent = chars[Math.floor(Math.random() * chars.length)];
+        char.style.left = `${Math.random() * 100}vw`;
+        char.style.animationDelay = `${Math.random() * 5}s`;
+        char.style.animationDuration = `${3 + Math.random() * 3}s`;
+        matrixContainer.appendChild(char);
+      }
+    }
+
+    window.addEventListener('load', () => {
+      createStars();
+      createMatrixEffect();
+    });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,126 @@
+---
+title: "Documentation"
+subtitle: "Welcome to the documentation for Futura, a Tailwind CSS-based template designed with a cyberpunk aesthetic."
+lastUpdated: "March 18, 2026"
+metaTitle: "Documentation | Futura AI Solutions"
+---
+
+This guide covers setup, installation, and customization to help you build stunning websites.
+
+## Setup and Installation
+
+Follow these steps to set up and run the Futura template on your local machine.
+
+### Step 1: Prepare Your Tools
+
+Before starting, ensure you have the following tools installed:
+
+- **Node.js and npm:** Download and install from [nodejs.org](https://nodejs.org). We recommend using the LTS version.
+- **Code Editor:** Use a code editor like Visual Studio Code, Sublime Text, or your preferred IDE.
+
+### Step 2: Open the Project
+
+Download the ZIP file and navigate to the project directory:
+
+```bash
+cd futura
+```
+
+### Step 3: Install Dependencies and Run the Project
+
+Run the following commands to install dependencies and start the development server:
+
+**Install Dependencies:**
+```bash
+npm install
+```
+
+This installs all required packages listed in `package.json`.
+
+**Start Development Server:**
+```bash
+npm run dev
+```
+
+This starts the development server. Open [http://localhost:4321](http://localhost:4321) in your browser.
+
+**Build for Production:**
+```bash
+npm run build
+```
+
+This generates optimized production files in the `dist` folder, ready for deployment.
+
+### Step 4: Customize Appearance
+
+Customize the template to match your brand and content:
+
+- **Edit Astro Files:** Modify components and pages in the `src/` folder to update content, text, images, and links.
+- **Replace Images:** Update images in the `public/img` folder with your own assets. Ensure paths in data files match the new filenames.
+
+## Customization
+
+Futura is built with Tailwind CSS v4, offering flexible customization options.
+
+### 1. Customize Tailwind Styles
+
+Edit `src/styles/global.css` to adjust theme configuration:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-poppins), sans-serif;
+  --font-future: var(--font-orbitron), sans-serif;
+  --color-cyber-blue: #00e5ff;
+  --color-cyber-dark: #001a2c;
+  --color-cyber-light: #0af0ff;
+}
+```
+
+You can also add Tailwind utility classes directly in `.astro` component files:
+
+```html
+<h1 class="text-4xl font-bold text-cyber-blue hover:text-white">Your Title</h1>
+```
+
+### 2. Add Custom CSS
+
+For styles beyond Tailwind's utilities, add custom CSS in `src/styles/global.css`:
+
+```css
+/* Custom animations */
+@keyframes pulse-slow {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 6s ease-in-out infinite;
+}
+
+/* Custom button styles */
+.custom-btn {
+  background: linear-gradient(45deg, #00b7eb, #007acc);
+  padding: 12px 24px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+```
+
+### 3. Change Base URL
+
+All internal links and image paths use the `url()` helper from `src/utils/path.ts`. To deploy under a different subfolder, simply change `base` in `astro.config.mjs`:
+
+```js
+export default defineConfig({
+  site: 'https://yourdomain.com',
+  base: '/your-subfolder',
+});
+```
+
+All links and image paths will update automatically.
+
+## Need Help?
+
+If you encounter issues or have questions about customizing Futura, contact our support team: **Lightestcode@gmail.com**

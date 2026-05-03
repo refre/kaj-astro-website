@@ -1,0 +1,82 @@
+---
+import Logo from "./Logo.astro";
+import { Icon } from "astro-icon/components";
+import { url } from "@src/utils/path";
+
+export interface NavItemType {
+  label: string;
+  href: string;
+  isActive?: boolean;
+}
+
+const navItems: NavItemType[] = [
+  { label: "Home", href: "/" },
+  { label: "About Us", href: "/about" },
+  { label: "Services", href: "/services" },
+  { label: "Projects", href: "/projects" },
+  { label: "Contact", href: "/contact" },
+  { label: "Blogs", href: "/blogs" },
+];
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+const currentPath = Astro.url.pathname.replace(base, '') || '/';
+---
+
+<header
+  x-data="{ mobileMenuOpen: false }"
+  class="fixed w-full z-40 bg-cyber-dark/80 backdrop-blur-md border-b border-cyber-blue/20"
+>
+  <div class="max-w-7xl mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+      <a href={url("/")} class="flex items-center font-future">
+        <Logo />
+      </a>
+
+      <!-- Desktop Menu -->
+      <nav class="hidden lg:flex space-x-8 font-future">
+        {navItems.map((item) => (
+          <a
+            href={url(item.href)}
+            class:list={[
+                'text-white hover:text-cyber-blue transition-colors',
+                { 'text-cyber-blue!': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }
+              ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+
+      <!-- Mobile menu button -->
+      <button
+        @click="mobileMenuOpen = !mobileMenuOpen"
+        class="lg:hidden text-cyber-blue focus:outline-none"
+      >
+        <Icon name="fa6-solid:bars" class="text-2xl" x-show="!mobileMenuOpen" />
+        <Icon name="fa6-solid:xmark" class="text-2xl" style="display: none;" x-show="mobileMenuOpen" />
+      </button>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div
+      x-show="mobileMenuOpen"
+      x-transition
+      class="lg:hidden mt-4 pb-4 font-future"
+      style="display:none;"
+    >
+      <nav class="flex flex-col space-y-4">
+        {navItems.map((item) => (
+          <a
+            href={url(item.href)}
+            class:list={[
+                'text-white hover:text-cyber-blue transition-colors',
+                { 'text-cyber-blue!': currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href)) }
+              ]}
+          >
+            {item.label}
+          </a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</header>

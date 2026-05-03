@@ -1,0 +1,44 @@
+---
+import { url } from '../utils/path';
+import { Icon } from 'astro-icon/components';
+---
+
+<section class="min-h-screen flex items-center justify-center relative overflow-hidden py-24">
+  <div class="absolute top-0 left-0 w-full h-full bg-linear-to-b from-cyber-dark via-transparent to-cyber-dark pointer-events-none"></div>
+
+  <div class="max-w-2xl mx-auto px-6 text-center relative">
+    <!-- Glowing 404 -->
+    <div class="relative mb-6">
+      <span class="text-[10rem] md:text-[12rem] font-bold font-orbitron leading-none text-cyber-blue text-shadow-glow select-none">
+        404
+      </span>
+      <div class="absolute inset-0 bg-cyber-blue/10 blur-3xl rounded-full pointer-events-none"></div>
+    </div>
+
+    <div class="h-1 w-24 bg-cyber-blue mx-auto rounded-full glow mb-8"></div>
+
+    <h1 class="text-3xl md:text-4xl font-bold mb-4">
+      Page <span class="text-cyber-blue text-shadow-glow">Not Found</span>
+    </h1>
+    <p class="text-gray-400 text-lg mb-10">
+      The page you're looking for doesn't exist or has been moved to another location.
+    </p>
+
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a
+        href={url('/')}
+        class="cyber-btn bg-cyber-blue text-cyber-dark font-bold py-3 px-8 transition-all duration-300 hover:bg-cyber-blue/90 flex items-center justify-center gap-2"
+      >
+        <Icon name="fa6-solid:house" />
+        Back to Home
+      </a>
+      <a
+        href={url('/blogs/')}
+        class="cyber-btn bg-transparent border border-cyber-blue text-cyber-blue font-bold py-3 px-8 transition-all duration-300 hover:bg-cyber-blue/10 flex items-center justify-center gap-2"
+      >
+        <Icon name="fa6-solid:newspaper" />
+        Read Our Blog
+      </a>
+    </div>
+  </div>
+</section>

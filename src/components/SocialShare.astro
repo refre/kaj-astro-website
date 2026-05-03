@@ -1,0 +1,58 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface Props {
+  title: string;
+  url: string;
+}
+
+const { title, url } = Astro.props;
+
+const encodedUrl = encodeURIComponent(url);
+const encodedTitle = encodeURIComponent(title);
+---
+
+<section
+  id="social-share"
+  class="relative mb-6 animate" data-animate="fadeInUp" data-delay="300">
+  <div class="mx-auto max-w-4xl px-6">
+    <div
+      class="flex items-center justify-between gap-2 border-t border-cyber-blue/20 py-6"
+    >
+      <h3 class="text-xl font-bold text-cyber-blue">Share</h3>
+      <div class="flex gap-4">
+        <a
+          href={`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`}
+          class="text-cyber-blue transition-colors hover:text-white"
+          aria-label="Share on Twitter"
+        >
+          <Icon name="fa6-brands:twitter" class="text-2xl" />
+        </a>
+        <a
+          href={`https://www.linkedin.com/shareArticle?url=${encodedUrl}&title=${encodedTitle}`}
+          class="text-cyber-blue transition-colors hover:text-white"
+          aria-label="Share on LinkedIn"
+        >
+          <Icon name="fa6-brands:linkedin" class="text-2xl" />
+        </a>
+        <a
+          href={`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`}
+          class="text-cyber-blue transition-colors hover:text-white"
+          aria-label="Share on Facebook"
+        >
+          <Icon name="fa6-brands:facebook" class="text-2xl" />
+        </a>
+        <a
+          href="#"
+          class="text-cyber-blue transition-colors hover:text-white"
+          aria-label="Copy link"
+          x-data="{ copied: false }"
+          @click="navigator.clipboard.writeText(window.location.href); copied = true; setTimeout(() => copied = false, 2000)"
+        >
+          <Icon name="fa6-solid:link" class="text-2xl" x-show="!copied" />
+          <Icon name="fa6-solid:check" class="text-2xl" x-show="copied" style="display:none" />
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

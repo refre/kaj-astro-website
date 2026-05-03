@@ -1,0 +1,41 @@
+---
+import MainLayout from "@src/layouts/MainLayout.astro";
+import ArticleHeader from "@src/components/ArticleHeader.astro";
+import ArticleContent from "@src/components/ArticleContent.astro";
+import SocialShare from "@src/components/SocialShare.astro";
+import AuthorInfo from "@src/components/AuthorInfo.astro";
+import RelatedPosts from "@src/components/RelatedPosts.astro";
+import { getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  return posts.map((post) => ({
+    params: { slug: post.id.replace(/\.mdx$/, "") },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { title, subtitle, metaDescription, category, date, author, readTime, featuredImage, relatedPosts } = post.data;
+const { Content } = await render(post);
+
+const currentUrl = new URL(Astro.url).toString();
+---
+
+<MainLayout title={`${title} | Futura AI Blog`} description={metaDescription || subtitle}>
+  <ArticleHeader
+    title={title}
+    subtitle={subtitle}
+    category={category}
+    date={date}
+    author={author}
+    readTime={readTime}
+    featuredImage={featuredImage}
+  />
+  <ArticleContent>
+    <Content />
+  </ArticleContent>
+  <SocialShare title={title} url={currentUrl} />
+  <AuthorInfo author={author} />
+  <RelatedPosts relatedPosts={relatedPosts} />
+</MainLayout>

@@ -1,0 +1,103 @@
+---
+import { Icon } from "astro-icon/components";
+import { url } from "@src/utils/path";
+import { projectData, filterTabs } from "@src/data/projects";
+---
+
+<section id="projects" class="py-24 relative overflow-hidden">
+  <div
+    class="absolute top-0 left-0 w-full h-64 bg-linear-to-b from-cyber-dark to-transparent"
+  ></div>
+  <div
+    class="absolute bottom-0 left-0 w-full h-64 bg-linear-to-t from-cyber-dark to-transparent"
+  ></div>
+
+  <div class="max-w-7xl mx-auto px-6 relative">
+    <div class="flex justify-center mb-16">
+      <div class="relative">
+        <h2 class="text-3xl md:text-4xl font-bold text-center">
+          Featured{" "}
+          <span class="text-cyber-blue text-shadow-glow">Projects</span>
+        </h2>
+        <div class="h-1 w-32 bg-cyber-blue mt-4 mx-auto rounded-full glow"></div>
+      </div>
+    </div>
+
+    <div x-data="{ activeTab: 'all' }">
+      <div class="flex flex-wrap justify-center gap-4 mb-12">
+        {filterTabs.map((tab) => (
+          <button
+            x-on:click={`activeTab = '${tab.value}'`}
+            x-bind:class={`{
+              'bg-cyber-blue text-cyber-dark': activeTab === '${tab.value}', 
+              'bg-transparent border border-cyber-blue text-cyber-blue': activeTab !== '${tab.value}'
+            }`}
+            class="cyber-btn py-2 px-6 transition-all duration-300"
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projectData.map((project, index) => (
+          <div
+            x-show={`activeTab === 'all' || activeTab === '${project.category}'`}
+            x-transition
+            class="group relative opacity-0"
+            data-animate="fadeInUp" data-delay={(index + 1) * 100}
+          >
+            <div
+              class="absolute inset-0 bg-cyber-blue/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+            <div
+              class="border border-cyber-blue/20 bg-cyber-dark/70 backdrop-blur-sm rounded-xl overflow-hidden h-full relative hover:border-cyber-blue/50 transition-all duration-300"
+            >
+              <div class="h-48 overflow-hidden">
+                <img
+                  src={url(project.image)}
+                  alt={project.title}
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
+                <div
+                  class="absolute top-4 right-4 px-3 py-1 bg-cyber-dark/80 backdrop-blur-sm rounded-full border border-cyber-blue/30 text-xs text-cyber-blue"
+                >
+                  {project.category === "ml"
+                    ? "Machine Learning"
+                    : project.category === "nlp"
+                    ? "NLP"
+                    : "Computer Vision"}
+                </div>
+              </div>
+
+              <div class="p-6">
+                <h3 class="text-xl font-bold mb-2 text-cyber-blue">
+                  {project.title}
+                </h3>
+                <p class="text-gray-300 mb-4">{project.description}</p>
+
+                <div class="flex flex-wrap gap-2 mb-6">
+                  {project.tags.map((tag) => (
+                    <span
+                      class="px-2 py-1 bg-cyber-blue/10 rounded-md text-xs text-cyber-blue"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+
+                <div class="flex gap-4">
+                  {project.links.map((link) => (
+                    <a href={link.href} class="flex items-center gap-2 text-cyber-blue hover:text-white transition-colors">
+                      <Icon name={link.icon} /> {link.label}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>

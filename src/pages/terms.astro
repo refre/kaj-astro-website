@@ -1,0 +1,17 @@
+---
+import MainLayout from '@src/layouts/MainLayout.astro';
+import PageSection from '@src/components/PageSection.astro';
+import { getEntry, render } from 'astro:content';
+
+const entry = await getEntry('pages', 'terms');
+if (!entry) throw new Error('Terms page content not found');
+
+const { Content } = await render(entry);
+const { title, subtitle, lastUpdated, metaTitle } = entry.data;
+---
+
+<MainLayout title={metaTitle ?? `${title} | Futura AI Solutions`}>
+  <PageSection pageData={{ title, subtitle, lastUpdated }}>
+    <Content />
+  </PageSection>
+</MainLayout>

@@ -1,0 +1,10 @@
+---
+import BlogPost from "@src/components/BlogPost.astro";
+import Newsletter from "@src/components/Newsletter.astro";
+import MainLayout from "@src/layouts/MainLayout.astro";
+---
+
+<MainLayout title="Blog | Futura AI">
+    <BlogPost currentPage={1} />
+    <Newsletter />
+</MainLayout>

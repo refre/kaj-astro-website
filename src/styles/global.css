@@ -1,0 +1,296 @@
+@import "tailwindcss";
+@theme {
+    --font-sans: var(--font-poppins), sans-serif;
+    --font-future: var(--font-orbitron), sans-serif;
+    --color-cyber-blue: #00e5ff;
+    --color-cyber-dark: #001a2c;
+    --color-cyber-light: #0af0ff;
+    --animation-pulse-slow: pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    --animation-float: float 6s ease-in-out infinite;
+    --animation-data-stream: dataStream 10s linear infinite;
+}
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-neutral-200, currentColor);
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: theme(--color-gray-400);
+  }
+  button, [role="button"] {
+    cursor: pointer;
+  }
+}
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+    background-color: var(--color-cyber-dark);
+    background-image: 
+        radial-gradient(circle at 25% 25%, rgba(0, 229, 255, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 75% 75%, rgba(0, 229, 255, 0.1) 0%, transparent 40%);
+    position: relative;
+    overflow-x: hidden;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-future);
+}
+.cyber-btn {
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    position: relative;
+    overflow: hidden;
+    animation: neonPulse 2s infinite;
+}
+
+.cyber-btn::before {
+    content: "";
+    position: absolute;
+    top: 2px;
+    transform: rotate(-45deg);
+    left: -4px;
+    width: 20px;
+    height: 1px;
+    background-color: currentColor;
+}
+
+.cyber-btn::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    transform: rotate(-45deg);
+    right: -3px;
+    width: 20px;
+    height: 1px;
+    background-color: currentColor;
+}
+.text-shadow-glow {
+    text-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
+}
+.glow {
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.5);
+}
+/* Data Stream Styles */
+.data-stream {
+    position: absolute;
+    width: 2px;
+    height: 100px;
+    background: linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.3), transparent);
+    animation: dataStream 10s linear infinite;
+    z-index: 0;
+}
+/* Twinkling Stars */
+.star {
+    position: fixed;
+    width: 2px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: softFade linear infinite;
+    animation-duration: inherit; /* Use duration set in JavaScript */
+    animation-delay: inherit; /* Use delay set in JavaScript */
+    z-index: 0;
+}
+@keyframes softFade {
+    0% {
+        opacity: 1; /* Fully visible */
+    }
+    50% {
+        opacity: 0; /* Fully transparent */
+    }
+    100% {
+        opacity: 1; /* Back to fully visible */
+    }
+}
+
+@keyframes floatStar {
+    0% { transform: translateY(100vh) translateX(0); }
+    100% { transform: translateY(-100vh) translateX(calc(10px * var(--direction))); }
+}
+
+/* Hologram Effect */
+.hologram-ring {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px solid rgba(0, 229, 255, 0.3);
+    border-radius: 50%;
+    animation: spinHologram 10s linear infinite;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.5);
+}
+@keyframes spinHologram {
+    0% { transform: rotate(0deg) rotateX(70deg); }
+    100% { transform: rotate(360deg) rotateX(70deg); }
+}
+/* Neon Pulse Button */
+@keyframes neonPulse {
+    0%, 100% { box-shadow: 0 0 10px rgba(0, 229, 255, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(0, 229, 255, 1), 0 0 30px rgba(0, 229, 255, 0.7); }
+}
+/* Matrix Code Effect */
+.matrix-code {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    overflow: hidden;
+    pointer-events: none;
+}
+.matrix-char {
+    position: absolute;
+    color: rgba(0, 229, 255, 0.5);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 14px;
+    animation: matrixFall 5s linear infinite;
+}
+@keyframes matrixFall {
+    0% { transform: translateY(-100vh); opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/*animate css*/
+.animate {
+    opacity: 0;
+}
+.animated {
+    opacity: 1;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+/* fadeInUp */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 100px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.fadeInUp {
+    animation-name: fadeInUp;
+}
+
+/* fadeInLeft */
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translate3d(-100px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.fadeInLeft {
+    animation-name: fadeInLeft;
+}
+
+/* fadeInRight */
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translate3d(100px, 0, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.fadeInRight {
+    animation-name: fadeInRight;
+}
+
+/* fadeInDown */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translate3d(0, -100px, 0);
+    }
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+.fadeInDown {
+    animation-name: fadeInDown;
+}
+
+/* delay */
+.delay100 {
+    animation-delay: 100ms;
+}
+.delay200 {
+    animation-delay: 200ms;
+}
+.delay300 {
+    animation-delay: 300ms;
+}
+.delay400 {
+    animation-delay: 400ms;
+}
+.delay500 {
+    animation-delay: 500ms;
+}
+.delay600 {
+    animation-delay: 600ms;
+}
+.delay700 {
+    animation-delay: 700ms;
+}
+.delay800 {
+    animation-delay: 800ms;
+}
+.delay900 {
+    animation-delay: 900ms;
+}
+.delay1000 {
+    animation-delay: 1000ms;
+}
+.delay1100 {
+    animation-delay: 1100ms;
+}
+.delay1200 {
+    animation-delay: 1200ms;
+}
+
+/* Post Content Typography */
+.post-content {
+    @apply text-gray-300 text-lg leading-relaxed max-w-4xl mx-auto;
+}
+.post-content h2 {
+    @apply text-3xl font-bold text-cyber-blue mt-8 mb-4;
+}
+.post-content h3 {
+    @apply text-2xl font-semibold text-cyber-blue mt-6 mb-3;
+}
+.post-content h4 {
+    @apply text-xl font-semibold text-cyber-blue mt-6 mb-3;
+}
+.post-content h5 {
+    @apply text-lg font-semibold text-cyber-blue mt-6 mb-3;
+}
+.post-content p {
+    @apply text-gray-300 mb-6;
+}
+.post-content ul {
+    @apply list-disc pl-6 mb-6;
+}
+.post-content li {
+    @apply mb-2;
+}
+.post-content a {
+    @apply text-cyber-blue hover:text-white transition-colors;
+}
+.post-content strong {
+    @apply font-bold text-gray-200;
+}
+.post-content pre {
+    @apply bg-cyber-blue/10 text-sm font-mono overflow-auto p-4 rounded-md border border-cyber-blue/20 mb-6 mt-3;
+}
